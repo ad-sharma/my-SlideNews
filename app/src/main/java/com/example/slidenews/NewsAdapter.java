@@ -3,10 +3,12 @@ package com.example.slidenews;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,13 +32,15 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
     List<News> values = new ArrayList<>();
     Context mContext;
-    String queryStr;
+    public static String queryStr;
     private RequestQueue requestQueue;
+    private View main_activity;
 
     public NewsAdapter(Context context, String Newsquery) {
         queryStr = Newsquery;
         requestQueue = Volley.newRequestQueue(context);
         mContext = context;
+
         loadNews();
     }
 
@@ -74,33 +78,39 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     public void loadNews() {
         String url;
+
         Log.d("json_str_inside_Adapter", queryStr);
-        if (queryStr.equals("")) {
-            Log.d("json_str", "Condition Always true");
-            url = "https://content.guardianapis.com/search?&api-key=56053666-9614-43e9-b99f-fbdabb55c3e4";
-        } else
+        if (!(queryStr.equals(""))) {
+            Log.d("json_str-if", queryStr);
+
             url = "https://content.guardianapis.com/search?q=" + queryStr + "&api-key=56053666-9614-43e9-b99f-fbdabb55c3e4";
-        Log.d("json_str", url);
+        } else {
+            Log.d("json_str-else", "Condition Always true");
+
+            url = "https://content.guardianapis.com/search?&api-key=56053666-9614-43e9-b99f-fbdabb55c3e4";
+        }
+
+        Log.d("json_str-url", url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
                         JSONObject responseJSONObject = response.getJSONObject("response");
                         String ed = responseJSONObject.getString("userTier");
-                        Log.d("json_str_inside_adapter", ed);
+                        //Log.d("json_str_inside_adapter", ed);
                         int pageSize = responseJSONObject.getInt("pageSize");
-                        Log.d("json_str", String.valueOf(pageSize));
+                        //Log.d("json_str", String.valueOf(pageSize));
                         JSONArray results = responseJSONObject.getJSONArray("results");
                         for (int i = 0; i < pageSize; i++) {
                             JSONObject card = results.getJSONObject(i);
                             String title = card.getString("webTitle") + ".";
-                            Log.d("json_str", title);
+                            //Log.d("json_str", title);
                             String author = card.getString("sectionName");
-                            Log.d("json_str", author);
+                            //Log.d("json_str", author);
                             String date = card.getString("webPublicationDate");
                             date = date.substring(0, date.indexOf('T'));
-                            Log.d("json_str", date);
+                            //Log.d("json_str", date);
                             String url1 = card.getString("webUrl");
-                            Log.d("json_str", "here goes the url ");
+                            //Log.d("json_str", url1);
                             News news = new News(author, date, title, url1);
                             values.add(news);
                         }
