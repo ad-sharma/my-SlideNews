@@ -12,6 +12,7 @@
         android:id="@+id/heading_text_view"
         tools:hint="Heading"
         android:textSize="25sp"
+        android:textColor="@color/black"
         />
 
     <TextView

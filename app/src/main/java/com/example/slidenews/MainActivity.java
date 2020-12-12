@@ -16,10 +16,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public List<News> input;
-    public String query = "";
+    public static String query = "";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    String str="";
 //dummy comment
     //another dummy comment
 
@@ -31,26 +32,23 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
         Log.d("json_str_main_this_one", query);
         mAdapter = new NewsAdapter(getApplicationContext(), query);
+
         recyclerView.setAdapter(mAdapter);
         Button goButton = (Button) findViewById(R.id.the_go_button);
         goButton.setOnClickListener(v -> {
             Log.d("json_str", "BUTTON CLICKED");
             EditText queryText = findViewById(R.id.edit_query);
             query = queryText.getText().toString();
-            Log.d("json_str_main", query);
+            Log.d("json_str_main",query);
             Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
+            //newIntent.putExtra("message_key",query);
             startActivity(newIntent);
         });
 
     }
 
-    public void reLoadNews() {
-        LinearLayout parent = (LinearLayout) findViewById(R.id.query_linear);
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-
-        getApplicationContext().startActivity(intent);
-    }
 }
